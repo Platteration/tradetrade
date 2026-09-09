@@ -2,6 +2,12 @@
 
 This repository is empty: the remote has no branches, no commits and no default branch, so there is no code to audit yet. The notes below are what to put in the first commit so the project starts with the same baseline the other Platteration repos have had to retrofit.
 
+## Status
+
+There is still no code, so nothing here has been fixed. Two of the items below
+are already done: this branch now carries an MIT `LICENSE` and a `SECURITY.md`.
+Everything else is waiting on the first commit.
+
 ## 1. Start the repository properly
 
 | Item | Why it matters here |
