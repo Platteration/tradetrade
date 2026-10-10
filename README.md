@@ -13,6 +13,14 @@ external services, telemetry integration or application secrets are required.
 The trading domain and first user journey still need to be defined before implementing
 the product. This foundation is not a marketplace or a financial service.
 
+### Compare the looks
+
+The original cream-and-green design is at `/`. The alternate **After hours** design at
+`/alternate` uses charcoal, bright citron, oversized type and geometric exchange artwork.
+Use the A/B links on either page to compare them. Both are public prelaunch pages with the
+same message; choosing a look does not store a preference or change product functionality.
+Desktop and mobile [visual previews](docs/design-previews/README.md) are included for review.
+
 ## Running it
 
 Use Node 22 (the major pinned in `.nvmrc`) and npm:

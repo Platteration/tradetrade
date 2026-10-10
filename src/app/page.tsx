@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Arrow } from "@/components/arrow";
+import { DesignSwitcher } from "@/components/design-switcher";
 import { site } from "@/lib/site";
 
 export default function Home() {
@@ -12,6 +13,7 @@ export default function Home() {
         </Link>
         <span className="header-note">A work in progress</span>
       </header>
+      <DesignSwitcher current="original" />
       <main id="main" className="hero">
         <p className="eyebrow"><span aria-hidden="true" /> Something new is on its way</p>
         <h1>Something worth<br /><span>exchanging.</span></h1>
