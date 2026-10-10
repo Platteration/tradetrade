@@ -1,0 +1,63 @@
+:root {
+  color-scheme: light;
+  --paper: #f6f4ec;
+  --ink: #202b21;
+  --muted: #586153;
+  --accent: #45632c;
+  --line: #d4d7c9;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: auto; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: Arial, Helvetica, sans-serif; }
+a { color: inherit; }
+a:focus-visible { outline: 3px solid var(--accent); outline-offset: 6px; border-radius: 2px; }
+.skip-link { position: fixed; top: -100px; left: 20px; z-index: 10; padding: 14px; background: var(--ink); color: var(--paper); }
+.skip-link:focus { top: 20px; }
+.page-shell { max-width: 1440px; min-height: 100svh; margin: auto; padding: 0 64px; display: flex; flex-direction: column; }
+.site-header { min-height: 116px; display: flex; align-items: center; justify-content: space-between; gap: 24px; border-bottom: 1px solid var(--line); }
+.wordmark { display: inline-flex; align-items: center; font-size: 30px; font-weight: 700; letter-spacing: -1.5px; text-decoration: none; }
+.brand-mark { display: inline-grid; place-items: center; width: 34px; height: 34px; margin-right: 10px; background: var(--ink); color: var(--paper); border-radius: 50%; font-size: 27px; }
+.brand-mark svg { width: 22px; height: 22px; }
+.wordmark-dot { color: var(--accent); }
+.header-note, .site-footer { font-size: 13px; color: var(--muted); }
+.hero { position: relative; padding: 100px 0 116px; flex: 1; }
+.eyebrow { display: flex; align-items: center; gap: 9px; margin: 0 0 36px; font-size: 11px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; }
+.eyebrow span { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+h1 { position: relative; z-index: 1; max-width: 750px; margin: 0; font-size: clamp(52px, 6.7vw, 88px); line-height: 1.04; font-weight: 500; letter-spacing: -4px; }
+h1 span { font-family: Georgia, "Times New Roman", serif; font-style: italic; color: var(--accent); }
+.intro { position: relative; z-index: 1; margin: 30px 0; color: var(--muted); font-size: 17px; line-height: 1.65; }
+.coming-soon { display: inline-flex; align-items: center; gap: 46px; border: 1px solid var(--line); border-radius: 40px; padding: 15px 23px; color: var(--accent); font-size: 13px; font-weight: 700; }
+.coming-soon svg { width: 19px; height: 19px; }
+.exchange-art { position: absolute; right: 8px; top: 210px; width: 350px; height: 310px; }
+.exchange-card { position: absolute; display: flex; flex-direction: column; justify-content: space-between; width: 205px; height: 250px; padding: 25px; border: 1px solid #b9c4a4; border-radius: 12px; }
+.exchange-card > span { font: 13px monospace; }
+.exchange-card > svg { width: 125px; height: 125px; align-self: center; }
+.arrow-back { transform: rotate(180deg); }
+.card-first { top: 0; left: 0; transform: rotate(-14deg); background: #dce5c9; color: #39552c; }
+.card-second { top: 65px; right: 0; transform: rotate(12deg); background: #2e432d; color: #e4ebd7; }
+.site-footer { display: flex; justify-content: space-between; gap: 20px; padding: 27px 0; border-top: 1px solid var(--line); }
+
+@media (max-width: 1100px) {
+  .exchange-art { position: relative; top: auto; right: auto; margin: 55px auto 0; }
+  .hero { padding: 70px 0; }
+}
+
+@media (max-width: 600px) {
+  .page-shell { padding: 0 24px; }
+  .site-header { min-height: 86px; }
+  .wordmark { font-size: 27px; }
+  .header-note { max-width: 90px; text-align: right; line-height: 1.5; }
+  .hero { padding: 54px 0 65px; }
+  .eyebrow { font-size: 10px; letter-spacing: 1px; margin-bottom: 28px; }
+  h1 { font-size: clamp(42px, 10vw, 60px); letter-spacing: -2px; }
+  .intro { font-size: 15px; }
+  .exchange-art { width: 270px; height: 290px; }
+  .exchange-card { width: 166px; height: 220px; padding: 20px; }
+  .exchange-card > svg { width: 106px; height: 106px; }
+  .site-footer { font-size: 11px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; }
+}

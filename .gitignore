@@ -1,3 +1,21 @@
+# dependencies
+/node_modules/
+
+# next.js
+/.next/
+/out/
+/build/
+next-env.d.ts
+*.tsbuildinfo
+
+# debug
+*.log
+.DS_Store
+
+# project
+/playwright-report/
+/test-results/
+
 # editors
 .vscode/
 .idea/

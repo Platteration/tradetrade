@@ -2,11 +2,26 @@
 
 # tradetrade
 
-An empty placeholder: the project has no code yet, and what it will trade is not yet decided.
+A prelaunch Next.js web foundation. The working name is kept in `src/lib/site.ts`;
+the trading domain and product features have not been decided. Do not invent accounts,
+payment processing, financial claims or live trading behavior without a product brief.
 
-There is no CI workflow, `.github/dependabot.yml`, `.nvmrc` or conventions test here yet:
-they arrive with the first code. Dependabot errors on a directory without a manifest, and
-a workflow with nothing to run is noise.
+Use Node 22 and `npm ci`. Run `npm run check`, `npm run test:e2e`, and
+`npm audit --omit=dev --audit-level=high` before proposing a release. The browser suite
+builds and starts its own production server. CI also validates the Docker image.
+
+`src/proxy.ts` generates a fresh CSP nonce per request. Keep the root layout dynamically
+rendered and use CSS files instead of inline styles. Never relax the production policy
+to fix a page. Development has explicit allowances for Next's tooling only.
+
+`/api/health` checks process liveness, not database or external-service readiness.
+No database, authentication, payment provider, application credentials or analytics are
+configured. Robots and metadata intentionally discourage indexing until launch review.
+They are not access controls; everything currently served is public.
+
+The shared conventions document includes historical references to this repository's
+placeholder stage. This repository now carries the first-code tooling those references
+deferred; leave the shared document and test byte-identical to the other repositories.
 
 ## Conventions
 

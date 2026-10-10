@@ -1,0 +1,16 @@
+.git
+.github
+.claude
+.next
+node_modules
+coverage
+playwright-report
+test-results
+*.log
+*.tsbuildinfo
+.env*
+.npmrc
+.vscode
+.idea
+Dockerfile
+.dockerignore
