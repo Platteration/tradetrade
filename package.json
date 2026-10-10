@@ -16,6 +16,7 @@
     "test:conventions": "node --test test/conventions.mjs",
     "check": "npm run lint && npm run typecheck && npm test && npm run test:conventions",
     "test:e2e": "npm run build && playwright test",
+    "test:deployed": "playwright test --config=playwright.deployed.config.ts",
     "test:all": "npm test && npm run test:e2e"
   },
   "dependencies": {

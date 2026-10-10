@@ -13,8 +13,10 @@ next-env.d.ts
 .DS_Store
 
 # project
+/.vercel/
 /playwright-report/
 /test-results/
+/test-results-deployed/
 
 # editors
 .vscode/

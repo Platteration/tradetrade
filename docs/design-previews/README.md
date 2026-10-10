@@ -12,5 +12,18 @@ implemented pages, not mockups. Open either image for the full-size preview.
 
 Captured from the production build in Chromium at 1440 × 1000 and 390 × 844
 (full-page captures). Both pages have A/B navigation, visible keyboard focus and
-the same prelaunch functionality. The working name is still configured in
-`src/lib/site.ts`. A public live deployment still needs a hosting target.
+the same link to the on-device collection. The working name is still configured in
+`src/lib/site.ts`. Vercel is selected; a public deployment is pending hosting access.
+
+## The collection
+
+Both designs open the same `/portfolio` workflow. These screenshots use fictional test
+entries to show card details, quantities, binder assignment and page/pocket notes. New
+collections start empty; these example cards are not added to anyone’s collection.
+
+| Desktop collection | Mobile collection |
+| --- | --- |
+| ![Desktop card collection](portfolio-desktop.png) | ![Mobile card collection](portfolio-mobile.png) |
+
+Cards are saved in the current browser. JSON export/import moves them between devices
+or domains; accounts and automatic synchronization are not connected.

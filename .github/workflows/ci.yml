@@ -100,8 +100,12 @@ jobs:
             exit 1
           fi
           curl --fail --silent --show-error http://127.0.0.1:3000/ >/dev/null
+          curl --fail --silent --show-error http://127.0.0.1:3000/alternate >/dev/null
+          curl --fail --silent --show-error http://127.0.0.1:3000/portfolio >/dev/null
           curl --fail --silent --show-error http://127.0.0.1:3000/icon.svg --output /tmp/tradetrade-icon.svg
           cmp public/icon.svg /tmp/tradetrade-icon.svg
+          curl --fail --silent --show-error http://127.0.0.1:3000/icon-alternate.svg --output /tmp/tradetrade-icon-alternate.svg
+          cmp public/icon-alternate.svg /tmp/tradetrade-icon-alternate.svg
           started=$(date +%s)
           docker stop --timeout 10 tradetrade-ci
           test "$(( $(date +%s) - started ))" -lt 10

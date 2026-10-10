@@ -1,0 +1,110 @@
+import { expect, test, type Locator } from "@playwright/test";
+
+async function expectReadableControls(scope: Locator) {
+  const measurements = await scope.evaluate((root) => {
+    function luminance(color: string) {
+      const components = color.match(/[\d.]+/g)?.map(Number);
+      if (!components || components.length < 3 || (components[3] !== undefined && components[3] !== 1)) {
+        throw new Error(`Expected an opaque RGB color, received ${color}`);
+      }
+      const linear = components.slice(0, 3).map((component) => {
+        const normalized = component / 255;
+        return normalized <= 0.04045 ? normalized / 12.92 : ((normalized + 0.055) / 1.055) ** 2.4;
+      });
+      return 0.2126 * linear[0]! + 0.7152 * linear[1]! + 0.0722 * linear[2]!;
+    }
+    function contrast(first: string, second: string) {
+      const a = luminance(first);
+      const b = luminance(second);
+      return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+    }
+    function background(element: Element | null) {
+      for (let ancestor = element; ancestor; ancestor = ancestor.parentElement) {
+        const color = getComputedStyle(ancestor).backgroundColor;
+        if (color !== "rgba(0, 0, 0, 0)" && color !== "transparent") return color;
+      }
+      return "rgb(255, 255, 255)";
+    }
+    const results: { description: string; ratio: number; minimum: number }[] = [];
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    let node: Node | null;
+    while ((node = walker.nextNode())) {
+      const text = node.textContent?.trim();
+      const element = node.parentElement;
+      if (!text || !element || !element.checkVisibility() || element.closest('[aria-hidden="true"], option, :disabled')) continue;
+      const style = getComputedStyle(element);
+      const size = parseFloat(style.fontSize);
+      const large = size >= 24 || (Number(style.fontWeight) >= 700 && size >= 18.6667);
+      results.push({ description: `Text ${JSON.stringify(text)}`, ratio: contrast(style.color, background(element)), minimum: large ? 3 : 4.5 });
+    }
+    for (const control of root.querySelectorAll("input:not([type=file]), select, textarea, button")) {
+      if (!control.checkVisibility() || control.matches(":disabled")) continue;
+      const style = getComputedStyle(control);
+      const name = control.getAttribute("aria-label") || control.getAttribute("name") || control.textContent?.trim() || control.tagName;
+      if (style.borderTopStyle !== "none" && style.borderTopColor !== "rgba(0, 0, 0, 0)") {
+        results.push({ description: `${name} boundary`, ratio: contrast(style.borderTopColor, background(control.parentElement)), minimum: 3 });
+      }
+      if (control instanceof HTMLInputElement || control instanceof HTMLSelectElement || control instanceof HTMLTextAreaElement) {
+        results.push({ description: `${name} value`, ratio: contrast(style.color, background(control)), minimum: 4.5 });
+      }
+      if (control instanceof HTMLInputElement && control.placeholder) {
+        results.push({ description: `${name} placeholder`, ratio: contrast(getComputedStyle(control, "::placeholder").color, background(control)), minimum: 4.5 });
+      }
+      if (control === document.activeElement) {
+        if (style.outlineStyle === "none" || parseFloat(style.outlineWidth) < 2) throw new Error(`${name} has no visible focus outline`);
+        results.push({ description: `${name} focus outline`, ratio: contrast(style.outlineColor, background(control.parentElement)), minimum: 3 });
+      }
+    }
+    return results;
+  });
+  expect(measurements.length).toBeGreaterThan(0);
+  for (const { description, ratio, minimum } of measurements) {
+    expect(ratio, `${description} must reach ${minimum}:1 contrast`).toBeGreaterThanOrEqual(minimum);
+  }
+}
+
+test("portfolio controls retain readable text, boundaries and keyboard focus", async ({ page }) => {
+  await page.goto("/portfolio");
+  const addCard = page.getByRole("button", { name: "Add card", exact: true });
+  await expect(addCard).toBeEnabled();
+  await expectReadableControls(page.getByRole("main"));
+
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page.getByRole("main")).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(addCard).toBeFocused();
+  await expectReadableControls(page.getByRole("main"));
+  await addCard.hover();
+  await expectReadableControls(page.getByRole("main"));
+
+  await page.keyboard.press("Enter");
+  const dialog = page.getByRole("dialog");
+  await expect(dialog).toBeVisible();
+  await page.getByRole("textbox", { name: "Name", exact: true }).focus();
+  await expectReadableControls(dialog);
+  await page.getByRole("button", { name: "Save card", exact: true }).click();
+  const invalidName = page.getByRole("textbox", { name: "Name", exact: true });
+  await expect(invalidName).toHaveAttribute("aria-invalid", "true");
+  await expect(invalidName).toBeFocused();
+  await expect(invalidName).toBeInViewport();
+  await expectReadableControls(dialog);
+});
+
+test("the portfolio's main action fits before the fold on narrow screens", async ({ page }) => {
+  for (const width of [390, 320]) {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto("/portfolio");
+    const addCard = page.getByRole("button", { name: "Add card", exact: true });
+    await expect(addCard).toBeEnabled();
+    const bounds = await addCard.boundingBox();
+    expect(bounds).not.toBeNull();
+    expect(bounds!.y).toBeGreaterThanOrEqual(0);
+    expect(bounds!.y + bounds!.height, "Adding a first card must not require scrolling past binder and backup tools").toBeLessThanOrEqual(844);
+    expect(bounds!.height).toBeGreaterThanOrEqual(44);
+    expect(bounds!.width).toBeGreaterThanOrEqual(44);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await expectReadableControls(page.getByRole("main"));
+  }
+});

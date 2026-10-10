@@ -60,6 +60,7 @@ test("keyboard users can see focus and skip to the main content", async ({ page 
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/\/#main$/);
   await expect(page.getByRole("main")).toBeInViewport();
+  await expect(page.getByRole("main")).toBeFocused();
 });
 
 test("rendered text meets WCAG AA contrast on the light palette", async ({ page }) => {
@@ -232,6 +233,17 @@ test("unknown routes return a protected 404", async ({ request, page }) => {
   expect(navigation?.status()).toBe(404);
   await expect(page.getByRole("heading", { name: /not found|doesn.t exist|can.t find/i })).toBeVisible();
   expect(errors).toEqual([]);
+
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page.getByRole("main")).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("link", { name: "Return home" })).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Something worth exchanging.", { useInnerText: true });
+  expect(errors, "Keyboard recovery from a missing page preserves hydration and the CSP").toEqual([]);
 });
 
 test("prefetch requests receive the same security protections", async ({ request }) => {

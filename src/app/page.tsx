@@ -14,11 +14,12 @@ export default function Home() {
         <span className="header-note">A work in progress</span>
       </header>
       <DesignSwitcher current="original" />
-      <main id="main" className="hero">
+      <main id="main" className="hero" tabIndex={-1}>
         <p className="eyebrow"><span aria-hidden="true" /> Something new is on its way</p>
         <h1>Something worth<br /><span>exchanging.</span></h1>
-        <p className="intro">A new place to make your next exchange.<br />We’re getting the details right. More soon.</p>
+        <p className="intro">A home for every trading card.<br />Organize your collection, one binder at a time.</p>
         <div className="coming-soon">Coming soon <Arrow /></div>
+        <p className="collection-entry"><a href="/portfolio">Start your card collection <span aria-hidden="true"><Arrow /></span></a><span>Cards, binders, and notes. No account needed.</span></p>
         <div className="exchange-art" aria-hidden="true">
           <div className="exchange-card card-first"><span>01</span><Arrow /></div>
           <div className="exchange-card card-second"><span>02</span><Arrow className="arrow-back" /></div>

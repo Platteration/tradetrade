@@ -33,6 +33,10 @@
 .intro { margin: 34px 0 28px; color: var(--muted); font-size: 15px; line-height: 1.7; }
 .soon { display: flex; justify-content: space-between; align-items: center; width: 225px; padding: 17px 0; border-top: 1px solid var(--accent); color: var(--accent); font-size: 12px; font-weight: 700; }
 .soon svg { width: 20px; height: 20px; }
+.collectionEntry { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; margin: 16px 0 0; }
+.collectionEntry a { display: inline-flex; align-items: center; gap: 20px; min-height: 44px; font-size: 14px; font-weight: 700; color: var(--accent); text-underline-offset: 5px; }
+.collectionEntry > span { font-size: 12px; line-height: 1.6; color: var(--muted); }
+.collectionEntry svg { width: 18px; height: 18px; vertical-align: middle; }
 .art { display: flex; flex-direction: column; justify-content: space-between; align-self: stretch; min-width: 0; padding: 26px; background: var(--accent); color: var(--paper); }
 .artTop, .artBottom { display: flex; align-items: center; justify-content: space-between; gap: 16px; font: 10px/1.4 monospace; letter-spacing: 1px; }
 .artTop { padding-bottom: 18px; border-bottom: 1px solid #6b8036; }

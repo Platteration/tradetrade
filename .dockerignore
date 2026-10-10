@@ -2,6 +2,8 @@
 .github
 .claude
 .next
+.vercel
+test-results-deployed
 node_modules
 coverage
 playwright-report

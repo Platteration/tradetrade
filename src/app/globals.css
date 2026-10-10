@@ -29,6 +29,10 @@ h1 span { font-family: Georgia, "Times New Roman", serif; font-style: italic; co
 .intro { position: relative; z-index: 1; margin: 30px 0; color: var(--muted); font-size: 17px; line-height: 1.65; }
 .coming-soon { display: inline-flex; align-items: center; gap: 46px; border: 1px solid var(--line); border-radius: 40px; padding: 15px 23px; color: var(--accent); font-size: 13px; font-weight: 700; }
 .coming-soon svg { width: 19px; height: 19px; }
+.collection-entry { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; margin: 24px 0 0; }
+.collection-entry a { display: inline-flex; align-items: center; gap: 20px; min-height: 44px; font-size: 14px; font-weight: 700; color: var(--accent); text-underline-offset: 5px; }
+.collection-entry > span { color: var(--muted); font-size: 12px; line-height: 1.6; }
+.collection-entry svg { width: 18px; height: 18px; vertical-align: middle; }
 .exchange-art { position: absolute; right: 8px; top: 210px; width: 350px; height: 310px; }
 .exchange-card { position: absolute; display: flex; flex-direction: column; justify-content: space-between; width: 205px; height: 250px; padding: 25px; border: 1px solid #b9c4a4; border-radius: 12px; }
 .exchange-card > span { font: 13px monospace; }

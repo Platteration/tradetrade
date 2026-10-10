@@ -1,17 +1,26 @@
 # tradetrade
 
-A prelaunch web foundation for a future trading product. It currently serves a coming-soon
-page and a process health endpoint; accounts, listings, exchanges and payments are not
-implemented. The working name is **Trade**, set in `src/lib/site.ts`.
+A trading-card portfolio for cards from any game, with two prelaunch designs to compare.
+The working name is **Trade**, set in `src/lib/site.ts`.
 
 ## Current scope
 
-Next.js App Router, React and strict TypeScript, with a production content security policy,
-unit and browser tests, dependency checks, and a non-root standalone container. No database,
-external services, telemetry integration or application secrets are required.
+At `/portfolio`, enter cards manually, record quantities and condition, and organize them
+into named binders. The location field can record a physical position such as
+"Page 2, pocket 4". This is a portfolio tracker; there is no connected card catalog,
+live pricing, marketplace, payment processing or trade execution.
 
-The trading domain and first user journey still need to be defined before implementing
-the product. This foundation is not a marketplace or a financial service.
+Entries stay in this browser's storage on this website. Export JSON backups and import
+them to move your collection to another browser, device or domain. Import adds valid new
+entries without replacing existing records and reports skipped items. Clearing website
+data or losing the browser profile can lose the collection; export backups regularly.
+Accounts and synchronization are not connected, so another device does not automatically
+receive your entries. A preview address and the production address have separate storage.
+
+The app uses Next.js App Router, React and strict TypeScript, with a production content
+security policy, unit and browser tests, dependency checks, and a non-root standalone
+container. No server database, external services, telemetry integration or application
+secrets are required.
 
 ### Compare the looks
 
@@ -60,8 +69,12 @@ Keep `Cache-Control: private, no-store` intact. Static Next assets may retain th
 cache policy. Production disallows arbitrary inline scripts/styles; development has
 explicit Next tooling allowances. No external domains are permitted by the current CSP.
 
-Before a public product launch, define and implement the core user flow, review its threat
-model, configure the actual HTTPS domain, verify hosted settings, and rerun the checks below.
+The [deployment and recovery runbook](docs/operations.md) covers Vercel, hosted checks,
+rollback, and moving a collection between origins. Vercel access is still pending; the
+repository configuration and local checks do not establish a live deployment.
+
+Before a public product launch, configure the actual HTTPS domain, verify hosted settings
+and the collection's backup/recovery flow, and rerun the checks below.
 The current `noindex` metadata and disallow-all `robots.txt` are deliberate prelaunch settings;
 review them at launch. They do not make the site private.
 
@@ -80,7 +93,18 @@ This explicitly uses the image's browser; CI installs Playwright's matching brow
 
 `check` runs lint, type checking, security unit tests and the shared conventions test.
 `test:e2e` builds, starts and stops its own production server on port 3100, then checks the
-desktop/mobile page, CSP enforcement, response headers, health and error behavior.
+desktop/mobile pages, portfolio behavior, CSP enforcement, response headers, health and
+error behavior. Check an already deployed release with an explicit origin:
+
+```sh
+DEPLOYMENT_URL=https://your-project.vercel.app npm run test:deployed
+```
+
+Replace the example with the actual deployment origin, without a path, query or fragment.
+`test:deployed` runs the same browser checks against that origin; it does not build the app
+or start a local server. A missing origin is an error, so it cannot silently test a local
+copy. The managed Chromium override also works with this command.
+
 `test:all` runs unit and browser tests together. Browser screenshots and traces stay outside
 tracked source. CI runs these checks, builds and probes the restricted container, and audits
 production dependencies, and scans the shipped image for high/critical OS and library
@@ -94,11 +118,13 @@ through the coordinated process described in `CONVENTIONS.md`.
 
 ## Project layout
 
-- `src/app/`: coming-soon page, error page, metadata and health route.
+- `src/app/`: design comparison pages, portfolio, error page, metadata and health route.
 - `src/proxy.ts`, `src/lib/security.ts`: nonce creation and browser security policy.
 - `src/lib/site.ts`: working name and description.
+- `src/lib/portfolio.ts`, `src/lib/portfolio-storage.ts`: card validation, persistence and backups.
 - `src/components/`: shared presentation components.
 - `test/`, `e2e/`: security, conventions and production browser checks.
+- `docs/operations.md`: deployment verification, rollback and collection recovery.
 - `.github/`: CI and dependency-update configuration.
 - `Dockerfile`: pinned, non-root standalone production image.
 

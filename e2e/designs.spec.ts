@@ -164,6 +164,16 @@ test("both designs remain comparable through links and browser history", async (
   expect(errors, "Changing designs preserves hydration and the production CSP").toEqual([]);
 });
 
+test("both designs open the same on-device collection", async ({ page }) => {
+  for (const route of ["/", "/alternate"]) {
+    await page.goto(route);
+    await page.getByRole("link", { name: "Start your card collection" }).click();
+    await expect(page).toHaveURL(/\/portfolio$/);
+    await expect(page.getByRole("heading", { name: "Your collection", exact: true })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Add card", exact: true })).toBeEnabled();
+  }
+});
+
 test("both version controls support keyboard navigation and touch targets", async ({ page }, testInfo) => {
   for (const route of ["/", "/alternate"]) {
     for (const name of versionNames) {
@@ -196,6 +206,7 @@ test("the alternate skip link moves keyboard users to its main content", async (
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/\/alternate#main$/);
   await expect(page.getByRole("main")).toBeInViewport();
+  await expect(page.getByRole("main")).toBeFocused();
 });
 
 test("the dark palette retains AA text contrast at rest and on hover", async ({ page }, testInfo) => {
