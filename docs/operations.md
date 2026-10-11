@@ -4,7 +4,8 @@ The app is a manual trading-card portfolio for any game. It stores card entries,
 binders and physical locations in the current browser. There is no server database,
 account synchronization, connected catalog, live pricing, payment provider or trading
 service to provision. The two prelaunch designs remain at `/` and `/alternate`; the
-collection is at `/portfolio`.
+collection is at `/portfolio`; graded-card price targets are at `/alerts`. Prices are
+recorded manually. No external pricing or notification service is configured.
 
 Vercel is the selected host. Access is still pending, so these are deployment instructions,
 not evidence of a completed hosted release. The app needs no runtime secrets. A Vercel
@@ -77,7 +78,9 @@ from reaching the app, resolve access to the intended test target and rerun it. 
 page or successful local test is not a passing hosted check.
 
 Read the test result and inspect the actual pages on desktop and mobile. Confirm both
-design links, portfolio entry/reload, binder locations, backup export/import, 404 keyboard
+design links, portfolio entry/reload, binder locations, 3D/reduced-motion behavior and
+opt-in sound. Verify graded-card buy/sell threshold equality, manual-price timestamps,
+alert pause/resume, both backup export/import flows, 404 keyboard
 recovery, and absence of JavaScript or CSP errors. Reports are written to
 `playwright-report/deployed/`; failure artifacts are in `test-results-deployed/`.
 Record the deployment URL and commit with the verification result.
@@ -108,6 +111,24 @@ unfiled. Review the import summary and keep the original backup. Importing a bac
 a way to overwrite newer details on an existing card. Do not edit the same collection in
 several tabs at once; a reported conflict requires exporting unsaved work and reloading
 the saved collection before continuing.
+
+## Alert storage and recovery
+
+Alerts use `tradetrade.price-alerts.v1` in the same browser storage, independently of
+`tradetrade.portfolio.v1`. Export both collection and alert backups before moving origins.
+An alert backup includes graded-card identities, targets and the last manually recorded
+prices; collection backups do not include alerts or card-effect preferences.
+
+Up to 2,000 alerts fit within a 2 MiB backup, subject to browser quota. The same visible
+save-failure, conflicting-tab and original-data recovery safeguards apply. Import keeps
+existing alert IDs and skips invalid or duplicate items with a report. Clearing browser
+data loses both stores. Editing a card identity or currency clears its old price because
+it no longer describes that exact graded card. Pausing preserves the target and price.
+
+A target being met describes the last price entered, not a current executable market
+quote. The page does not poll markets, place trades or notify users while the browser is
+closed. Connecting a pricing source requires a separate integration with exact graded-card
+matching, source timestamps and supported currencies before claiming live monitoring.
 
 ## Roll back a release
 

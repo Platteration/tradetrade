@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { Arrow } from "@/components/arrow";
+import { CardEffectsControls, CardEffectsProvider, CardMotion, CardStack, useCardEffects } from "@/components/card-motion";
 import { site } from "@/lib/site";
 import {
   BINDER_NAME_LIMIT, CARD_CONDITIONS, CARD_FIELD_LIMITS, MAX_CARD_QUANTITY,
@@ -50,6 +51,11 @@ function Modal({ title, onClose, children, busy }: { title: string; onClose: () 
 }
 
 export function Portfolio() {
+  return <CardEffectsProvider><PortfolioContent /></CardEffectsProvider>;
+}
+
+function PortfolioContent() {
+  const { playCardMovement } = useCardEffects();
   const [data, setData] = useState<PortfolioData>(emptyPortfolio);
   const [revision, setRevision] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
@@ -211,7 +217,10 @@ export function Portfolio() {
       updatedAt: now > lastDate ? now : lastDate,
     };
     const cards = previous ? data.cards.map((entry) => entry.id === card.id ? card : entry) : [...data.cards, card];
-    if (await commit({ ...data, cards }, previous ? "Card changes saved on this device." : "Card added and saved on this device.")) closeEditor();
+    if (await commit({ ...data, cards }, previous ? "Card changes saved on this device." : "Card added and saved on this device.")) {
+      closeEditor();
+      playCardMovement();
+    }
   }
 
   async function saveBinder(event: FormEvent<HTMLFormElement>) {
@@ -309,8 +318,12 @@ export function Portfolio() {
       <header className={styles.header}>
         {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- Document navigation preserves the browser's unsaved-work guard. */}
         <a className="wordmark" href="/" onClick={navigateAway} aria-label={`${site.name} home`}><span className="brand-mark" aria-hidden="true"><Arrow /></span>{site.name}<span className="wordmark-dot">.</span></a>
-        {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- Keep collection history entries as separate documents for beforeunload. */}
-        <a className={styles.backLink} href="/" onClick={navigateAway}>Compare designs <span aria-hidden="true"><Arrow /></span></a>
+        <nav className={styles.navigation} aria-label="Collection navigation">
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- Document navigation preserves the browser's unsaved-work guard. */}
+          <a className={styles.backLink} href="/alerts" onClick={navigateAway}>Price alerts</a>
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- Keep collection history entries as separate documents for beforeunload. */}
+          <a className={styles.backLink} href="/" onClick={navigateAway}>Compare designs <span aria-hidden="true"><Arrow /></span></a>
+        </nav>
       </header>
       <main id="main" tabIndex={-1} className={styles.main}>
         <div className={styles.introduction}>
@@ -343,13 +356,13 @@ export function Portfolio() {
                 <label className={styles.field}>Sort cards<select value={sort} onChange={(event) => setSort(event.target.value)}><option value="recent">Recently updated</option><option value="name">Name A–Z</option></select></label>
               </div>
               {visibleCards.length === 0 ? <div className={styles.empty}>
-                <span className={styles.emptyMark} aria-hidden="true"><Arrow /></span>
+                <CardStack />
                 <h3>{data.cards.length === 0 ? "Your first card belongs here." : "No cards match just yet."}</h3>
                 <p>{data.cards.length === 0 ? "Start with a favorite. Add its game, a binder, and where to find it. No account needed." : "Try a different search or choose another binder."}</p>
                 {data.cards.length === 0 ? <button type="button" className={styles.textButton} onClick={() => openEditor({ kind: "card" })} disabled={cannotWrite}>Add your first card <span aria-hidden="true"><Arrow /></span></button> : <button type="button" className={styles.textButton} onClick={() => { setSearch(""); setBinderFilter("all"); }}>Clear filters</button>}
               </div> : <div className={styles.cards}>{visibleCards.map((card) => {
                 const binder = data.binders.find((entry) => entry.id === card.binderId);
-                return <article className={styles.card} key={card.id} aria-label={card.name}>
+                return <CardMotion key={card.id} movementKey={card.updatedAt}><article className={styles.card} aria-label={card.name}>
                   <div className={styles.cardTop}><span className={styles.game}>{card.game}</span><span className={styles.quantity}>×{card.quantity}</span></div>
                   <h3>{card.name}</h3>
                   {(card.setName || card.cardNumber) && <p className={styles.cardSet}>{[card.setName, card.cardNumber ? `#${card.cardNumber}` : ""].filter(Boolean).join(" · ")}</p>}
@@ -357,7 +370,7 @@ export function Portfolio() {
                   <div className={styles.location}><strong>{binder?.name ?? "Unfiled"}</strong>{card.location && <span>{card.location}</span>}</div>
                   {card.notes && <p className={styles.notes}>{card.notes}</p>}
                   <div className={styles.cardActions}><button type="button" aria-label={`Edit ${card.name}`} onClick={() => openEditor({ kind: "card", card })} disabled={cannotWrite}>Edit card <span aria-hidden="true"><Arrow /></span></button><button type="button" aria-label={`Delete ${card.name}`} onClick={() => deleteCard(card)} disabled={cannotWrite}>Delete</button></div>
-                </article>;
+                </article></CardMotion>;
               })}</div>}
             </section>
             <aside className={styles.sidebar} aria-label="Binders">
@@ -372,6 +385,7 @@ export function Portfolio() {
                 <button type="button" className={styles.secondary} onClick={() => download(exportPortfolioBackup(data), "portfolio-backup")} disabled={!readable || busy}>Export backup <span aria-hidden="true">↓</span></button>
                 <label className={styles.importLabel}>Import backup<input type="file" accept=".json,application/json" disabled={cannotWrite} onChange={(event) => { const file = event.target.files?.[0]; event.target.value = ""; if (file) void importBackup(file); }} /></label>
               </div>
+              <CardEffectsControls />
             </aside>
           </div>
         </>}

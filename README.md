@@ -10,6 +10,16 @@ into named binders. The location field can record a physical position such as
 "Page 2, pocket 4". This is a portfolio tracker; there is no connected card catalog,
 live pricing, marketplace, payment processing or trade execution.
 
+Collection cards lift and tilt in 3D, with optional synthesized card-rustling sound.
+Sound starts off and can be enabled in the collection sidebar; motion has a separate
+control and respects the device’s reduced-motion setting. Preferences stay on this device.
+
+At `/alerts`, save graded-card buy-at-or-below and sell-at-or-above price targets. Each
+alert identifies the game, card, variant, grading company, grade and currency. Record a
+price manually to see whether its target is met. The page shows the recorded timestamp;
+it does not fetch market prices or send background notifications while closed. Alert
+backups are separate from collection backups.
+
 Entries stay in this browser's storage on this website. Export JSON backups and import
 them to move your collection to another browser, device or domain. Import adds valid new
 entries without replacing existing records and reports skipped items. Clearing website
@@ -93,7 +103,7 @@ This explicitly uses the image's browser; CI installs Playwright's matching brow
 
 `check` runs lint, type checking, security unit tests and the shared conventions test.
 `test:e2e` builds, starts and stops its own production server on port 3100, then checks the
-desktop/mobile pages, portfolio behavior, CSP enforcement, response headers, health and
+desktop/mobile pages, portfolio and price-alert behavior, card effects, CSP enforcement, response headers, health and
 error behavior. Check an already deployed release with an explicit origin:
 
 ```sh
@@ -118,10 +128,12 @@ through the coordinated process described in `CONVENTIONS.md`.
 
 ## Project layout
 
-- `src/app/`: design comparison pages, portfolio, error page, metadata and health route.
+- `src/app/`: design comparison pages, portfolio, price alerts, error page, metadata and health route.
 - `src/proxy.ts`, `src/lib/security.ts`: nonce creation and browser security policy.
 - `src/lib/site.ts`: working name and description.
 - `src/lib/portfolio.ts`, `src/lib/portfolio-storage.ts`: card validation, persistence and backups.
+- `src/lib/price-alerts.ts`, `src/lib/price-alert-storage.ts`: graded-card targets and alert backups.
+- `src/lib/card-audio.ts`, `src/components/card-motion.tsx`: optional card sound and 3D movement.
 - `src/components/`: shared presentation components.
 - `test/`, `e2e/`: security, conventions and production browser checks.
 - `docs/operations.md`: deployment verification, rollback and collection recovery.

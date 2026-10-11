@@ -108,3 +108,45 @@ test("the portfolio's main action fits before the fold on narrow screens", async
     await expectReadableControls(page.getByRole("main"));
   }
 });
+
+
+test("graded-card alert controls have readable text, boundaries and focus", async ({ page }) => {
+  await page.goto("/alerts");
+  const add = page.getByRole("button", { name: "Add alert", exact: true });
+  await expect(add).toBeEnabled();
+  await expectReadableControls(page.getByRole("main"));
+  await add.focus();
+  await expectReadableControls(page.getByRole("main"));
+  await add.hover();
+  await expectReadableControls(page.getByRole("main"));
+  await page.keyboard.press("Enter");
+  const dialog = page.getByRole("dialog");
+  await expect(dialog).toBeVisible();
+  await expectReadableControls(dialog);
+  await dialog.getByRole("button", { name: "Save alert", exact: true }).focus();
+  await page.keyboard.press("Enter");
+  await expect(dialog.getByRole("alert")).toBeVisible();
+  await expectReadableControls(dialog);
+  await dialog.getByRole("textbox", { name: "Card name", exact: true }).fill("Contrast check card");
+  await dialog.getByRole("textbox", { name: "Game", exact: true }).fill("Independent cards");
+  await dialog.getByRole("textbox", { name: "Grading company", exact: true }).fill("PSA");
+  await dialog.getByRole("textbox", { name: "Grade", exact: true }).fill("10");
+  await dialog.getByRole("textbox", { name: "Target price", exact: true }).fill("100");
+  await dialog.getByRole("button", { name: "Save alert", exact: true }).focus();
+  await page.keyboard.press("Enter");
+  await expect(dialog).not.toBeVisible();
+  await expectReadableControls(page.getByRole("main"));
+  await page.getByRole("button", { name: "Record price for Contrast check card", exact: true }).focus();
+  await page.keyboard.press("Enter");
+  const priceDialog = page.getByRole("dialog");
+  await expectReadableControls(priceDialog);
+  await priceDialog.getByRole("textbox", { name: "Recorded price (USD)", exact: true }).fill("100");
+  await priceDialog.getByRole("button", { name: "Save price", exact: true }).focus();
+  await page.keyboard.press("Enter");
+  await expect(priceDialog).not.toBeVisible();
+  await expectReadableControls(page.getByRole("main"));
+  await page.getByRole("button", { name: "Pause Contrast check card alert", exact: true }).focus();
+  await page.keyboard.press("Enter");
+  await expect(page.getByRole("button", { name: "Resume Contrast check card alert", exact: true })).toBeEnabled();
+  await expectReadableControls(page.getByRole("main"));
+});

@@ -27,3 +27,22 @@ collections start empty; these example cards are not added to anyone’s collect
 
 Cards are saved in the current browser. JSON export/import moves them between devices
 or domains; accounts and automatic synchronization are not connected.
+
+
+## Card movement and graded-card targets
+
+Collection cards now tilt and lift in 3D with pointer, touch and keyboard interaction.
+The sidebar offers independent motion and sound controls. Sound is off by default;
+Preview shuffle plays the synthesized card rustle after enabling it. Reduced-motion
+preferences keep cards still.
+
+The `/alerts` page stores graded-card buying and selling targets. These production
+screenshots use fictional cards and manually entered example prices, not market data.
+A new watchlist starts empty. Target status refers to the last entered price and its
+recorded timestamp; live pricing and background notifications are not connected.
+
+| Desktop price alerts | Mobile price alerts |
+| --- | --- |
+| ![Desktop graded-card targets](alerts-desktop.png) | ![Mobile graded-card targets](alerts-mobile.png) |
+
+Export alert backups separately from collection backups when moving devices or domains.

@@ -6,6 +6,10 @@ A Next.js trading-card portfolio for any game. The working name is kept in
 `src/lib/site.ts`. `/portfolio` supports manual card entries and named binders; a free-text
 location can identify a physical page and pocket. Entries live in browser storage and
 can be exported/imported as JSON backups. Accounts and synchronization are not connected.
+`/alerts` stores graded-card buy/sell targets and manually recorded prices in its own
+version 1 store, with separate backups. A target status refers to the last recorded price;
+there is no market polling or closed-browser notification service. Card motion uses CSS
+and respects reduced motion; optional Web Audio rustling starts off.
 Do not imply a card catalog, live prices, payment processing or trade execution exists.
 
 Use Node 22 and `npm ci`. Run `npm run check`, `npm run test:e2e`, and
