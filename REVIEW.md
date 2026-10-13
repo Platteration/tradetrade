@@ -1,12 +1,17 @@
 # tradetrade — review (2026-09-09)
 
-This repository is empty: the remote has no branches, no commits and no default branch, so there is no code to audit yet. The notes below are what to put in the first commit so the project starts with the same baseline the other Platteration repos have had to retrofit.
+At the time of the original review this repository was an empty placeholder, with no code to audit. The notes below are what to put in the first commit so the project starts with the same baseline the other Platteration repos have had to retrofit.
 
-## Status
+## Current scope (2026-10-10)
 
-There is still no code, so nothing here has been fixed. Two of the items below
-are already done: this branch now carries an MIT `LICENSE` and a `SECURITY.md`.
-Everything else is waiting on the first commit.
+The repository now has a prelaunch Next.js foundation, security policy, unit/browser checks,
+CI and a standalone container. This is infrastructure for building the product, not a
+completed trading application. The domain, accounts, trade workflow, any payment integration
+and production hosting still need to be defined and reviewed. The sections below preserve
+the original recommendations; they are not claims that those product controls exist.
+
+The baseline before this foundation had nine documentation/configuration files and no
+executable checks. See `README.md` for the current setup and validation commands.
 
 ## 1. Start the repository properly
 
@@ -15,7 +20,7 @@ Everything else is waiting on the first commit.
 | A `main` default branch, created before any feature branch | Several sibling repos (battleshiple, chesscheatser, abientnoiser) only have a `claude/...` branch. Their GitHub Pages workflows deploy from `main`/`master`, so those deploys never run. Create `main` first and branch from it. |
 | `README.md` stating what the app does, who it is for, and how money or assets flow through it | The name suggests trading. Whether that means trading cards (as in collectcollect) or financial instruments changes the security bar completely; write it down before writing code. |
 | `LICENSE` | Missing from 10 of the 14 sibling repos. Pick one now (MIT is what abientnoiser, chesscheatser, phonogeometry and sudokuoku use). |
-| `.gitignore`, `.editorconfig`, `.nvmrc` | The repo currently has no `.gitignore` at all. Copy the one from collectcollect or notenote so `node_modules/`, `.env`, `data/`, and build output never land in git. |
+| `.gitignore`, `.editorconfig`, `.nvmrc` | The original placeholder needed a stack-specific ignore file so `node_modules/`, `.env`, `data/`, and build output never land in git. |
 | `SECURITY.md` with a private reporting channel | Only simplacad has one. |
 | `.env.example` with every variable documented, and `.env` in `.gitignore` | notenote and collectcollect are the templates: each variable has a comment saying what it does and whether it is required. |
 
@@ -83,3 +88,67 @@ These are non-negotiable if the app ever handles real value:
 3. Only then add the app shell.
 
 Cross-repo context and the shared CI hardening recipe live in the consolidated review that accompanies this file.
+
+## Historical shared record
+
+The following record is preserved verbatim for the shared conventions test. It describes
+the repository family at the dates given; the current tradetrade scope is stated above.
+
+### Status of the shared items (2026-09-21)
+
+Recorded after the security audit and the cohesion pass; the numbering above is kept
+because other findings in this file cite it. The items are not edited: this file is a
+record of what was found, and this block is a record of what was done about it. The
+block is shared text, the same in every repository and pinned by the conventions test;
+a note about one repository belongs in that repository's own status section.
+
+1. Done: every workflow sets `permissions: contents: read` (security audit).
+2. Done: every `uses:` is pinned to a commit SHA with the tag in a comment (security audit).
+3. Done: `.github/dependabot.yml` in every repository that has a manifest (tradetrade gets
+   one with its first code).
+4. Open, by decision: no `npm audit` step. Unactioned advisories only turn CI red;
+   Dependabot's security updates are the channel. Reconsider if those go unmerged.
+   Reversed (2026-09-23): Dependabot opens security updates against the default branch
+   only, and no repository with a manifest had the branch this work was done on as its
+   default, so they were no channel for it. Every npm repository with a lockfile now has
+   an `audit` job of its own in `ci.yml`, running `npm audit --omit=dev --audit-level=high`
+   with no install and nothing that stops it going red; randostats has one that runs a
+   hash-pinned `pip-audit` over its declared dependencies, at the newest versions they
+   resolve to and at its declared floors, which were raised clear of the advisories that
+   audit found. selfreportle and phonogeometry keep no lockfile (item 6) and have no audit
+   job; abientnoiser's audits an empty production tree, Playwright being its one
+   dependency and a development one; simplacad made three, which it ships vendored, a
+   production dependency so that its audit covers it. CI also runs weekly on a schedule,
+   which GitHub runs from the default branch only: once `main` is the default (item 10),
+   an advisory published against an unchanged tree turns `audit` red within a week
+   without a push, and Dependabot's security updates reach this code as well.
+5. Done: `npm ci || npm install` appears nowhere.
+6. Half: abientnoiser and simplacad have lockfiles and `npm ci`; selfreportle and
+   phonogeometry deliberately keep none and install Playwright at a pinned version with
+   `--no-save --no-package-lock --ignore-scripts` (there are no dependencies to track).
+7. Not verifiable from the tree: a repository setting, still recommended.
+8. Done: every repository has an MIT `LICENSE` and a `license` field.
+9. Done: every repository has `SECURITY.md`.
+10. Decided (2026-09-23): `main` is created from `claude/repo-review-security-baiyud`
+    once this pass has landed. Making it the default branch, and enabling Pages where a
+    repository deploys (Settings → Pages → Source: GitHub Actions), are repository
+    settings for the owner, which the tree can neither make nor check. Until `main` is the
+    default, nothing runs CI's weekly schedule, since GitHub runs a schedule only from the
+    default branch's workflow file, and a Pages workflow can be run by hand only where the
+    default branch already carries one.
+11. Done (2026-09-23): drawdraw is on Expo SDK 57 like the other Expo apps, and in
+    TypeScript like them: strict, with `noUncheckedIndexedAccess`, and `npm run typecheck`
+    in `check` and in CI. Node is pinned to 22 in every npm repository through `.nvmrc`.
+12. Open: a shared package is presented, not implemented. The twins' configuration and
+    settings changes land as one identical diff in both, and each carries the other's tests.
+
+The workflow below is the shape every npm repository's `ci.yml` now follows; the exact
+form is in `CONVENTIONS.md`. The audit is not a step of `check` but a job of its own
+(item 4), `check` also runs `npm run test:conventions`, and the triggers add
+`workflow_dispatch` and a weekly `schedule:`. The Python repository runs `ruff check .`,
+`pytest -q` and its own conventions test.
+
+### A hardened workflow to copy
+
+The current implementation is `.github/workflows/ci.yml`; its required structure is
+documented in `CONVENTIONS.md`.

@@ -1,0 +1,112 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 6 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run test:conventions
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - name: Upload browser failure evidence
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: playwright-failure
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+      - run: npm audit --omit=dev --audit-level=high
+
+  docker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: docker build --tag tradetrade:ci .
+      - name: Scan the shipped image for high and critical vulnerabilities
+        run: |
+          set -eu
+          mkdir -p "$RUNNER_TEMP/trivy"
+          curl --fail --silent --show-error --location \
+            --output "$RUNNER_TEMP/trivy/trivy.tar.gz" \
+            https://github.com/aquasecurity/trivy/releases/download/v0.75.0/trivy_0.75.0_Linux-64bit.tar.gz
+          printf '%s  %s\n' \
+            c6e65abddb348e25f10549df887045629cf28cc72453cd1c63acb717316b3f3f \
+            "$RUNNER_TEMP/trivy/trivy.tar.gz" | sha256sum --check
+          tar -xzf "$RUNNER_TEMP/trivy/trivy.tar.gz" -C "$RUNNER_TEMP/trivy" trivy
+          "$RUNNER_TEMP/trivy/trivy" image \
+            --db-repository ghcr.io/aquasecurity/trivy-db:2 \
+            --scanners vuln --pkg-types os,library --severity HIGH,CRITICAL \
+            --exit-code 1 tradetrade:ci
+      - name: Verify the production container
+        run: |
+          set -eu
+          trap 'docker rm --force tradetrade-ci >/dev/null' EXIT
+          docker run --detach --name tradetrade-ci --read-only \
+            --cap-drop=ALL --security-opt=no-new-privileges \
+            --tmpfs /tmp:rw,noexec,nosuid,size=64m \
+            --publish 127.0.0.1:3000:3000 tradetrade:ci
+          test "$(docker inspect --format '{{.Config.User}}' tradetrade-ci)" = 65532:65532
+          ready=false
+          for attempt in $(seq 1 30); do
+            status=$(docker inspect --format '{{.State.Health.Status}}' tradetrade-ci)
+            if [ "$status" = healthy ]; then
+              ready=true
+              break
+            fi
+            if [ "$status" = unhealthy ]; then
+              break
+            fi
+            sleep 2
+          done
+          if [ "$ready" != true ]; then
+            docker logs tradetrade-ci
+            exit 1
+          fi
+          curl --fail --silent --show-error http://127.0.0.1:3000/ >/dev/null
+          curl --fail --silent --show-error http://127.0.0.1:3000/alternate >/dev/null
+          curl --fail --silent --show-error http://127.0.0.1:3000/portfolio >/dev/null
+          curl --fail --silent --show-error http://127.0.0.1:3000/alerts >/dev/null
+          curl --fail --silent --show-error http://127.0.0.1:3000/icon.svg --output /tmp/tradetrade-icon.svg
+          cmp public/icon.svg /tmp/tradetrade-icon.svg
+          curl --fail --silent --show-error http://127.0.0.1:3000/icon-alternate.svg --output /tmp/tradetrade-icon-alternate.svg
+          cmp public/icon-alternate.svg /tmp/tradetrade-icon-alternate.svg
+          started=$(date +%s)
+          docker stop --timeout 10 tradetrade-ci
+          test "$(( $(date +%s) - started ))" -lt 10

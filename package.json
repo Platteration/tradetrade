@@ -1,0 +1,37 @@
+{
+  "name": "tradetrade",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test": "tsx --test test/*.test.ts",
+    "test:conventions": "node --test test/conventions.mjs",
+    "check": "npm run lint && npm run typecheck && npm test && npm run test:conventions",
+    "test:e2e": "npm run build && playwright test",
+    "test:deployed": "playwright test --config=playwright.deployed.config.ts",
+    "test:all": "npm test && npm run test:e2e"
+  },
+  "dependencies": {
+    "next": "16.4.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.4.0",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3"
+  }
+}
