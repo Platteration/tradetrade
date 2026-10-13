@@ -6,6 +6,12 @@ account synchronization, connected catalog, live pricing, payment provider or tr
 service to provision. The two prelaunch designs remain at `/` and `/alternate`; the
 collection is at `/portfolio`; graded-card price targets are at `/alerts`. Prices are
 recorded manually. No external pricing or notification service is configured.
+The broader `/inventory` tracks CS skins, books and custom items with manual values
+and buying/selling targets. It requires no Steam account or external catalog service.
+`/sources` keeps public website links and manually observed prices on this device;
+`/account` displays prepared, unavailable Google and Apple sign-in options.
+See [authentication](authentication.md) and [website tracking](website-tracking.md) before
+connecting services. Optional provider configuration does not activate authentication.
 
 Vercel is the selected host. Access is still pending, so these are deployment instructions,
 not evidence of a completed hosted release. The app needs no runtime secrets. A Vercel
@@ -80,7 +86,7 @@ page or successful local test is not a passing hosted check.
 Read the test result and inspect the actual pages on desktop and mobile. Confirm both
 design links, portfolio entry/reload, binder locations, 3D/reduced-motion behavior and
 opt-in sound. Verify graded-card buy/sell threshold equality, manual-price timestamps,
-alert pause/resume, both backup export/import flows, 404 keyboard
+alert pause/resume, all four backup export/import flows, 404 keyboard
 recovery, and absence of JavaScript or CSP errors. Reports are written to
 `playwright-report/deployed/`; failure artifacts are in `test-results-deployed/`.
 Record the deployment URL and commit with the verification result.
@@ -129,6 +135,34 @@ A target being met describes the last price entered, not a current executable ma
 quote. The page does not poll markets, place trades or notify users while the browser is
 closed. Connecting a pricing source requires a separate integration with exact graded-card
 matching, source timestamps and supported currencies before claiming live monitoring.
+
+## Inventory storage and recovery
+
+Inventory uses `tradetrade.inventory.v1`, independently of collection and graded-alert
+storage. Export its backup as well before changing origins or devices. It supports
+5,000 item entries within 2 MiB of serialized data, subject to the browser's lower quota.
+Its import/recovery preserves existing IDs and skips invalid entries with a report.
+Older releases without `/inventory` cannot show its entries; keep the storage and backups
+intact during rollback. Card and graded-alert version 1 formats remain compatible.
+
+## Website source storage and recovery
+
+Sources use `tradetrade.sources.v1`, independently of the other three stores. Export all
+four backups before moving to another origin. Sources support up to 1,000 entries within
+2 MiB, subject to browser quota. Imports salvage valid entries, preserve existing IDs and
+report skipped rows. Storage failure, conflicting-tab and original-data recovery safeguards
+also apply here. Older releases cannot show sources, so retain their storage during rollback.
+
+Links are public HTTPS product pages, not connection credentials. Sources and their backups
+can contain personal notes and URLs; do not place access tokens or private links in them.
+Each price is a manual observation in its own currency with the time it was entered.
+Changing the URL, tracked item or currency clears the old price. Renaming the website or
+editing notes preserves it. There is no automatic polling, price propagation or notification.
+
+Verify source add/edit/delete, safe external links, actual observation timestamps,
+backup/recovery and the absence of automatic website requests on the intended host.
+Google/Apple controls must remain unavailable until the separate authentication integration
+passes its documented gates. The health route continues to measure process liveness only.
 
 ## Roll back a release
 

@@ -2,15 +2,32 @@
 
 # tradetrade
 
-A Next.js trading-card portfolio for any game. The working name is kept in
+A Next.js collectible portfolio. The working name is kept in
 `src/lib/site.ts`. `/portfolio` supports manual card entries and named binders; a free-text
 location can identify a physical page and pocket. Entries live in browser storage and
 can be exported/imported as JSON backups. Accounts and synchronization are not connected.
+`/inventory` adds CS:GO / CS2 skins, books and custom collectible categories. Its own
+version 1 store and backups keep typed item details, quantities, locations, manual
+per-unit cost/value estimates and optional buy/sell targets. Totals stay separate by
+currency, use exact BigInt arithmetic, and expose priced coverage. Estimated change
+compares only entries with both cost and value; unpriced items must never imply zero.
+Steam inventory, book catalogs, live prices and currency conversion are not connected.
 `/alerts` stores graded-card buy/sell targets and manually recorded prices in its own
 version 1 store, with separate backups. A target status refers to the last recorded price;
 there is no market polling or closed-browser notification service. Card motion uses CSS
 and respects reduced motion; optional Web Audio rustling starts off.
 Do not imply a card catalog, live prices, payment processing or trade execution exists.
+
+`/sources` saves user-provided public HTTPS product links and manual price observations
+in its own `tradetrade.sources.v1` store. Saving a source never fetches a website or submits
+a request to the maintainer. Observations are separate from inventory estimates and
+graded-card alerts. Keep executable URLs, credentials and private-address links rejected;
+client URL validation is not a substitute for future server-side SSRF defenses. See
+`docs/website-tracking.md` before adding any ingestion service.
+`/account` prepares optional Google/Apple configuration and displays unavailable sign-in
+controls. Credentials alone must never enable authentication; there is no OAuth adapter,
+session or synchronization service yet. Read `docs/authentication.md` before connecting one.
+Keep provider secrets server-only, and keep on-device collections usable without an account.
 
 Use Node 22 and `npm ci`. Run `npm run check`, `npm run test:e2e`, and
 `npm audit --omit=dev --audit-level=high` before proposing a release. The browser suite

@@ -1,0 +1,47 @@
+.page { --muted: #53604f; --edge: #7d8872; max-width: 1440px; min-height: 100svh; margin: auto; padding: 0 56px; display: flex; flex-direction: column; }
+.header { min-height: 104px; display: flex; align-items: center; justify-content: space-between; gap: 24px; border-bottom: 1px solid var(--line); }
+.navigation { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 4px 24px; }
+.navigation a { display: inline-flex; align-items: center; min-height: 44px; font-size: 13px; text-underline-offset: 5px; }
+.main { flex: 1; padding: 46px 0 70px; }
+.eyebrow { color: var(--accent); font-size: 10px; line-height: 1.6; font-weight: 700; text-transform: uppercase; letter-spacing: 1.3px; margin: 0 0 12px; }
+.main h1 { font-size: clamp(38px, 4.2vw, 60px); letter-spacing: -2.5px; font-weight: 500; }
+.intro { max-width: 620px; color: var(--muted); font-size: 15px; line-height: 1.7; margin: 18px 0 36px; }
+.layout { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 36px; align-items: start; }
+.signIn { padding: 28px; border: 1px solid var(--line); border-radius: 10px; background: #fffef9; }
+.sectionHeading, .providerHeading { display: flex; align-items: baseline; justify-content: space-between; gap: 18px; }
+.sectionHeading h2, .device h2 { font-size: 20px; font-weight: 500; margin: 0; letter-spacing: -.4px; }
+.sectionHeading > span, .providerHeading > span { color: var(--muted); font-size: 11px; line-height: 1.6; text-align: right; }
+.signIn > p, .device > p, .backups p { color: var(--muted); font-size: 13px; line-height: 1.75; margin: 18px 0 0; }
+.providers { display: grid; gap: 16px; margin: 26px 0; }
+.provider { border: 1px solid var(--line); border-radius: 8px; padding: 20px; background: var(--paper); }
+.providerHeading h3 { margin: 0; font-size: 16px; font-weight: 700; }
+.provider button { display: block; width: 100%; min-height: 48px; margin-top: 18px; padding: 12px 16px; background: #e7ebdf; color: #53604f; border: 1px solid var(--edge); border-radius: 6px; font: inherit; font-size: 13px; font-weight: 700; cursor: not-allowed; }
+.provider p { font-size: 12px; color: var(--muted); line-height: 1.65; margin: 12px 0 0; }
+.signIn > .privacy { font-size: 12px; padding-top: 22px; border-top: 1px solid var(--line); }
+.device { padding: 28px; min-width: 0; }
+.deviceMark { display: inline-flex; align-items: center; justify-content: center; width: 58px; height: 58px; background: #e7ebdf; border-radius: 50%; color: var(--accent); margin: 0 0 22px; }
+.deviceMark svg { width: 37px; height: 37px; }
+.primary { display: flex; align-items: center; justify-content: space-between; gap: 18px; min-height: 48px; padding: 13px 16px; background: var(--ink); color: var(--paper); border: 1px solid var(--ink); border-radius: 6px; font-size: 13px; font-weight: 700; text-decoration: none; margin-top: 24px; }
+.primary:hover { background: var(--accent); border-color: var(--accent); }
+.primary svg, .backups a svg { width: 17px; height: 17px; flex-shrink: 0; }
+.backups { border-top: 1px solid var(--line); margin-top: 28px; padding-top: 26px; }
+.backups h3 { margin: 0; font-size: 14px; }
+.backups p { margin: 12px 0; font-size: 12px; }
+.backups a { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; color: var(--accent); font-size: 12px; line-height: 1.6; text-underline-offset: 4px; }
+.footer { border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 20px; padding: 26px 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+@media (max-width: 1050px) { .page { padding: 0 30px; } .layout { gap: 20px; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); } .signIn, .device { padding: 22px; } }
+@media (max-width: 700px) {
+  .page { padding: 0 20px; }
+  .header { min-height: 86px; gap: 16px; }
+  .navigation { gap: 0 12px; }
+  .navigation a { font-size: 11px; }
+  .main { padding: 30px 0 45px; }
+  .main h1 { letter-spacing: -1.8px; }
+  .intro { font-size: 13px; margin: 14px 0 26px; }
+  .layout { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .signIn { padding: 20px; }
+  .provider { padding: 16px; }
+  .device { padding: 0; }
+  .footer { flex-direction: column; gap: 8px; font-size: 11px; }
+}
+@media (max-width: 380px) { .page { padding: 0 16px; } .navigation { max-width: 130px; } .sectionHeading { align-items: flex-start; } .sectionHeading h2 { font-size: 19px; } }

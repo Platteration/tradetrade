@@ -1,9 +1,22 @@
 # tradetrade
 
-A trading-card portfolio for cards from any game, with two prelaunch designs to compare.
+A collectible portfolio for trading cards, CS skins, books and custom items, with two
+prelaunch designs to compare.
 The working name is **Trade**, set in `src/lib/site.ts`.
 
 ## Current scope
+
+At `/inventory`, keep CS:GO / CS2 skins, books and other collectibles in one inventory.
+Skins have weapon, finish, exterior, float and pattern details; books have author,
+edition, format and ISBN / identifier details. Custom categories cover other kinds of
+items. Record quantities, condition, storage or account locations, and notes.
+
+Enter purchase cost and estimated current value per item, plus optional buying and
+selling targets. The portfolio groups totals by currency without conversion and shows
+how many entries have prices. Estimated change compares only entries that have both
+cost and value. Values are entered manually with a timestamp; there is no connected
+Steam inventory, book catalog or market-price feed. Inventory backups are separate from
+card and graded-alert backups.
 
 At `/portfolio`, enter cards manually, record quantities and condition, and organize them
 into named binders. The location field can record a physical position such as
@@ -19,6 +32,21 @@ alert identifies the game, card, variant, grading company, grade and currency. R
 price manually to see whether its target is met. The page shows the recorded timestamp;
 it does not fetch market prices or send background notifications while closed. Alert
 backups are separate from collection backups.
+
+At `/sources`, save public HTTPS product pages for items you want to track, including
+websites without a connected pricing provider. Give each source a name, item description
+and notes, and optionally record an observed price and currency. Sources are checked
+manually: saving a URL does not fetch it, schedule monitoring, or send a tracking request
+to the maintainer. Source prices do not change portfolio estimates or trigger graded-card
+alerts. Website backups have their own export/import and recovery flow. See the
+[website tracking integration guide](docs/website-tracking.md) for connecting automation.
+
+At `/account`, Google and Apple sign-in have a prepared configuration contract and an
+integration guide. The buttons remain disabled, including when optional credentials are
+present, until a real authentication service is connected. No accounts, sessions or
+synchronization are created. See [authentication setup](docs/authentication.md) for provider
+registration, callback paths and the checks required before activation. Using the local
+portfolio does not require signing in.
 
 Entries stay in this browser's storage on this website. Export JSON backups and import
 them to move your collection to another browser, device or domain. Import adds valid new
@@ -128,11 +156,16 @@ through the coordinated process described in `CONVENTIONS.md`.
 
 ## Project layout
 
-- `src/app/`: design comparison pages, portfolio, price alerts, error page, metadata and health route.
+- `src/app/`: design comparison pages, collectible inventory, card collection, price alerts,
+  website sources, account preparation, error page, metadata and health route.
 - `src/proxy.ts`, `src/lib/security.ts`: nonce creation and browser security policy.
 - `src/lib/site.ts`: working name and description.
 - `src/lib/portfolio.ts`, `src/lib/portfolio-storage.ts`: card validation, persistence and backups.
+- `src/lib/inventory.ts`, `src/lib/inventory-storage.ts`: collectible details, exact valuation
+  totals, persistence and inventory backups.
 - `src/lib/price-alerts.ts`, `src/lib/price-alert-storage.ts`: graded-card targets and alert backups.
+- `src/lib/tracking-sources.ts`, `src/lib/tracking-source-storage.ts`: safe website links,
+  manual observations, persistence and source backups.
 - `src/lib/card-audio.ts`, `src/components/card-motion.tsx`: optional card sound and 3D movement.
 - `src/components/`: shared presentation components.
 - `test/`, `e2e/`: security, conventions and production browser checks.

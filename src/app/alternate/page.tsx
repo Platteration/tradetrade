@@ -27,8 +27,9 @@ export default function Alternate() {
             <div className={styles.copy}>
               <p className={styles.eyebrow}>Something new is on its way</p>
               <h1 className={styles.title}>Something<br />worth<br /><span>exchanging.</span></h1>
-              <p className={styles.intro}>A home for every trading card.<br />Organize your collection, one binder at a time.</p>
+              <p className={styles.intro}>A home for everything you collect.<br />Trading cards, CS skins, books, and whatever comes next.</p>
               <div className={styles.soon}><span>Coming soon</span><Arrow /></div>
+              <p className={styles.collectionEntry}><a href="/inventory">Explore your portfolio <span aria-hidden="true"><Arrow /></span></a><span>Track what you own, where it lives, and your own value estimates.</span></p>
               <p className={styles.collectionEntry}><a href="/portfolio">Start your card collection <span aria-hidden="true"><Arrow /></span></a><span>Cards, binders, and notes. No account needed.</span></p>
             </div>
             <div className={styles.art} aria-hidden="true">
