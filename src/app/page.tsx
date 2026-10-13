@@ -17,8 +17,9 @@ export default function Home() {
       <main id="main" className="hero" tabIndex={-1}>
         <p className="eyebrow"><span aria-hidden="true" /> Something new is on its way</p>
         <h1>Something worth<br /><span>exchanging.</span></h1>
-        <p className="intro">A home for every trading card.<br />Organize your collection, one binder at a time.</p>
+        <p className="intro">A home for everything you collect.<br />Trading cards, CS skins, books, and whatever comes next.</p>
         <div className="coming-soon">Coming soon <Arrow /></div>
+        <p className="collection-entry"><a href="/inventory">Explore your portfolio <span aria-hidden="true"><Arrow /></span></a><span>Track what you own, where it lives, and your own value estimates.</span></p>
         <p className="collection-entry"><a href="/portfolio">Start your card collection <span aria-hidden="true"><Arrow /></span></a><span>Cards, binders, and notes. No account needed.</span></p>
         <div className="exchange-art" aria-hidden="true">
           <div className="exchange-card card-first"><span>01</span><Arrow /></div>

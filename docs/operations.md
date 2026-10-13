@@ -6,6 +6,8 @@ account synchronization, connected catalog, live pricing, payment provider or tr
 service to provision. The two prelaunch designs remain at `/` and `/alternate`; the
 collection is at `/portfolio`; graded-card price targets are at `/alerts`. Prices are
 recorded manually. No external pricing or notification service is configured.
+The broader `/inventory` tracks CS skins, books and custom items with manual values
+and buying/selling targets. It requires no Steam account or external catalog service.
 
 Vercel is the selected host. Access is still pending, so these are deployment instructions,
 not evidence of a completed hosted release. The app needs no runtime secrets. A Vercel
@@ -129,6 +131,15 @@ A target being met describes the last price entered, not a current executable ma
 quote. The page does not poll markets, place trades or notify users while the browser is
 closed. Connecting a pricing source requires a separate integration with exact graded-card
 matching, source timestamps and supported currencies before claiming live monitoring.
+
+## Inventory storage and recovery
+
+Inventory uses `tradetrade.inventory.v1`, independently of collection and graded-alert
+storage. Export its backup as well before changing origins or devices. It supports
+5,000 item entries within 2 MiB of serialized data, subject to the browser's lower quota.
+Its import/recovery preserves existing IDs and skips invalid entries with a report.
+Older releases without `/inventory` cannot show its entries; keep the storage and backups
+intact during rollback. Card and graded-alert version 1 formats remain compatible.
 
 ## Roll back a release
 

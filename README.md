@@ -1,9 +1,22 @@
 # tradetrade
 
-A trading-card portfolio for cards from any game, with two prelaunch designs to compare.
+A collectible portfolio for trading cards, CS skins, books and custom items, with two
+prelaunch designs to compare.
 The working name is **Trade**, set in `src/lib/site.ts`.
 
 ## Current scope
+
+At `/inventory`, keep CS:GO / CS2 skins, books and other collectibles in one inventory.
+Skins have weapon, finish, exterior, float and pattern details; books have author,
+edition, format and ISBN / identifier details. Custom categories cover other kinds of
+items. Record quantities, condition, storage or account locations, and notes.
+
+Enter purchase cost and estimated current value per item, plus optional buying and
+selling targets. The portfolio groups totals by currency without conversion and shows
+how many entries have prices. Estimated change compares only entries that have both
+cost and value. Values are entered manually with a timestamp; there is no connected
+Steam inventory, book catalog or market-price feed. Inventory backups are separate from
+card and graded-alert backups.
 
 At `/portfolio`, enter cards manually, record quantities and condition, and organize them
 into named binders. The location field can record a physical position such as
@@ -128,10 +141,13 @@ through the coordinated process described in `CONVENTIONS.md`.
 
 ## Project layout
 
-- `src/app/`: design comparison pages, portfolio, price alerts, error page, metadata and health route.
+- `src/app/`: design comparison pages, collectible inventory, card collection, price alerts,
+  error page, metadata and health route.
 - `src/proxy.ts`, `src/lib/security.ts`: nonce creation and browser security policy.
 - `src/lib/site.ts`: working name and description.
 - `src/lib/portfolio.ts`, `src/lib/portfolio-storage.ts`: card validation, persistence and backups.
+- `src/lib/inventory.ts`, `src/lib/inventory-storage.ts`: collectible details, exact valuation
+  totals, persistence and inventory backups.
 - `src/lib/price-alerts.ts`, `src/lib/price-alert-storage.ts`: graded-card targets and alert backups.
 - `src/lib/card-audio.ts`, `src/components/card-motion.tsx`: optional card sound and 3D movement.
 - `src/components/`: shared presentation components.

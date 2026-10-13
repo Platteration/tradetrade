@@ -103,6 +103,7 @@ jobs:
           curl --fail --silent --show-error http://127.0.0.1:3000/alternate >/dev/null
           curl --fail --silent --show-error http://127.0.0.1:3000/portfolio >/dev/null
           curl --fail --silent --show-error http://127.0.0.1:3000/alerts >/dev/null
+          curl --fail --silent --show-error http://127.0.0.1:3000/inventory >/dev/null
           curl --fail --silent --show-error http://127.0.0.1:3000/icon.svg --output /tmp/tradetrade-icon.svg
           cmp public/icon.svg /tmp/tradetrade-icon.svg
           curl --fail --silent --show-error http://127.0.0.1:3000/icon-alternate.svg --output /tmp/tradetrade-icon-alternate.svg

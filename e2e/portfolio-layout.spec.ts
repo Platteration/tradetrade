@@ -150,3 +150,56 @@ test("graded-card alert controls have readable text, boundaries and focus", asyn
   await expect(page.getByRole("button", { name: "Resume Contrast check card alert", exact: true })).toBeEnabled();
   await expectReadableControls(page.getByRole("main"));
 });
+
+test("collectible portfolio categories, estimates and editors retain readable controls", async ({ page }) => {
+  await page.goto("/inventory");
+  const add = page.getByRole("button", { name: "Add item", exact: true });
+  await expect(add).toBeEnabled();
+  await expectReadableControls(page.getByRole("main"));
+  for (const kind of ["cs-skin", "book", "other"]) {
+    await add.focus();
+    await expectReadableControls(page.getByRole("main"));
+    await page.keyboard.press("Enter");
+    const dialog = page.getByRole("dialog", { name: "Add an item", exact: true });
+    await dialog.getByRole("combobox", { name: "Category", exact: true }).selectOption(kind);
+    await dialog.getByRole("textbox", { name: "Name", exact: true }).focus();
+    await expectReadableControls(dialog);
+    await dialog.getByRole("button", { name: "Save item", exact: true }).focus();
+    await page.keyboard.press("Enter");
+    await expect(dialog.getByRole("alert")).toBeVisible();
+    await expectReadableControls(dialog);
+    await dialog.getByRole("textbox", { name: "Name", exact: true }).fill(`Contrast ${kind}`);
+    if (kind === "other") await dialog.getByRole("textbox", { name: "Collectible category", exact: true }).fill("Keepsakes");
+    await dialog.getByRole("textbox", { name: "Purchase cost per item", exact: true }).fill("1.00");
+    await dialog.getByRole("textbox", { name: "Current estimate per item", exact: true }).fill("2.00");
+    await dialog.getByRole("textbox", { name: "Sell target per item", exact: true }).fill("2.00");
+    await dialog.getByRole("button", { name: "Save item", exact: true }).focus();
+    await page.keyboard.press("Enter");
+    await expect(dialog).not.toBeVisible();
+    await expectReadableControls(page.getByRole("main"));
+  }
+  const books = page.getByRole("button", { name: "Books", exact: true });
+  await books.focus();
+  await page.keyboard.press("Enter");
+  await expect(books).toHaveAttribute("aria-pressed", "true");
+  await expectReadableControls(page.getByRole("main"));
+  await books.hover();
+  await expectReadableControls(page.getByRole("main"));
+});
+
+test("the collectible portfolio fits narrow screens with its main action visible", async ({ page }) => {
+  for (const width of [390, 320]) {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto("/inventory");
+    const add = page.getByRole("button", { name: "Add item", exact: true });
+    await expect(add).toBeEnabled();
+    const bounds = await add.boundingBox();
+    expect(bounds).not.toBeNull();
+    expect(bounds!.y).toBeGreaterThanOrEqual(0);
+    expect(bounds!.y + bounds!.height).toBeLessThanOrEqual(844);
+    expect(bounds!.height).toBeGreaterThanOrEqual(44);
+    expect(bounds!.width).toBeGreaterThanOrEqual(44);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await expectReadableControls(page.getByRole("main"));
+  }
+});

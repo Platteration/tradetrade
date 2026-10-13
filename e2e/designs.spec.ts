@@ -276,3 +276,15 @@ test("alternate HTML retains fresh server nonces and the production protections"
   }
   expect(new Set(nonces).size).toBe(2);
 });
+
+test("both designs open the broader collectible portfolio", async ({ page }) => {
+  for (const route of ["/", "/alternate"]) {
+    await page.goto(route);
+    const entry = page.getByRole("link", { name: "Explore your portfolio", exact: true });
+    await expect(entry).toHaveAttribute("href", "/inventory");
+    await entry.click();
+    await expect(page).toHaveURL(/\/inventory$/);
+    await expect(page.getByRole("heading", { name: "Your portfolio", exact: true })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Add item", exact: true })).toBeEnabled();
+  }
+});

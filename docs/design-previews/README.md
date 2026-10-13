@@ -46,3 +46,19 @@ recorded timestamp; live pricing and background notifications are not connected.
 | ![Desktop graded-card targets](alerts-desktop.png) | ![Mobile graded-card targets](alerts-mobile.png) |
 
 Export alert backups separately from collection backups when moving devices or domains.
+
+## The broader portfolio
+
+`/inventory` tracks CS:GO / CS2 skins, books and custom collectibles. Each category has
+its own details, while quantity, condition, location, notes and optional manual values
+work across them. Buying and selling targets compare the last entered unit estimate.
+
+| Desktop portfolio | Mobile portfolio |
+| --- | --- |
+| ![Desktop skins, books and collectible portfolio](inventory-desktop.png) | ![Mobile skins, books and collectible portfolio](inventory-mobile.png) |
+
+These production screenshots contain fictional entries and prices. Summary totals include
+quantities and show priced coverage; currencies are kept separate. Trading cards keep
+their binder workflow, accessible through the same navigation. Back up the broader
+inventory separately from cards and graded-card alerts. Steam inventories and live
+market prices are not connected.

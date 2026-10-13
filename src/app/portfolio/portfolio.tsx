@@ -319,6 +319,7 @@ function PortfolioContent() {
         {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- Document navigation preserves the browser's unsaved-work guard. */}
         <a className="wordmark" href="/" onClick={navigateAway} aria-label={`${site.name} home`}><span className="brand-mark" aria-hidden="true"><Arrow /></span>{site.name}<span className="wordmark-dot">.</span></a>
         <nav className={styles.navigation} aria-label="Collection navigation">
+          <a className={styles.backLink} href="/inventory" onClick={navigateAway}>Portfolio</a>
           <a className={styles.backLink} href="/alerts" onClick={navigateAway}>Price alerts</a>
           {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- Keep collection history entries as separate documents for beforeunload. */}
           <a className={styles.backLink} href="/" onClick={navigateAway}>Compare designs <span aria-hidden="true"><Arrow /></span></a>
