@@ -62,3 +62,20 @@ quantities and show priced coverage; currencies are kept separate. Trading cards
 their binder workflow, accessible through the same navigation. Back up the broader
 inventory separately from cards and graded-card alerts. Steam inventories and live
 market prices are not connected.
+
+## Website sources and optional accounts
+
+`/sources` keeps public HTTPS product links and manually recorded prices for any item.
+The examples below are fictional. Saving a source does not fetch the website or enable
+automatic tracking; each source clearly shows its manual status.
+
+| Desktop websites | Mobile websites |
+| --- | --- |
+| ![Desktop website sources](sources-desktop.png) | ![Mobile website sources](sources-mobile.png) |
+
+`/account` shows the prepared Google and Apple options. Both remain unavailable until
+a real authentication integration is connected. Local collections require no account.
+
+| Desktop account preparation | Mobile account preparation |
+| --- | --- |
+| ![Desktop account preparation](account-desktop.png) | ![Mobile account preparation](account-mobile.png) |

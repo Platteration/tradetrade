@@ -239,6 +239,8 @@ export function Alerts() {
       <a className="wordmark" href="/" onClick={navigateAway} aria-label={`${site.name} home`}><span className="brand-mark" aria-hidden="true"><Arrow /></span>{site.name}<span className="wordmark-dot">.</span></a>
       <nav className={styles.navigation} aria-label="Your cards">
         <a href="/inventory" onClick={navigateAway}>Portfolio</a>
+        <a href="/sources" onClick={navigateAway}>Website sources</a>
+        <a href="/account" onClick={navigateAway}>Account</a>
         {/* Keep saved-data pages as separate documents for beforeunload. */}
         <a href="/portfolio" onClick={navigateAway}>Collection</a><span aria-current="page">Price alerts</span>
       </nav>

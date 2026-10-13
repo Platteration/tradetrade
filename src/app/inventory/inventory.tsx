@@ -321,6 +321,8 @@ export function Inventory() {
       <nav className={styles.navigation} aria-label="Portfolio navigation">
         {/* Document navigation preserves the browser's unsaved-work guard. */}
         <a href="/portfolio" onClick={navigateAway}>Trading cards</a>
+        <a href="/sources" onClick={navigateAway}>Website sources</a>
+        <a href="/account" onClick={navigateAway}>Account</a>
         {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- Document navigation preserves the browser's unsaved-work guard. */}
         <a href="/" onClick={navigateAway}>Compare designs <Arrow /></a>
       </nav>

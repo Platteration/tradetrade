@@ -18,6 +18,17 @@ there is no market polling or closed-browser notification service. Card motion u
 and respects reduced motion; optional Web Audio rustling starts off.
 Do not imply a card catalog, live prices, payment processing or trade execution exists.
 
+`/sources` saves user-provided public HTTPS product links and manual price observations
+in its own `tradetrade.sources.v1` store. Saving a source never fetches a website or submits
+a request to the maintainer. Observations are separate from inventory estimates and
+graded-card alerts. Keep executable URLs, credentials and private-address links rejected;
+client URL validation is not a substitute for future server-side SSRF defenses. See
+`docs/website-tracking.md` before adding any ingestion service.
+`/account` prepares optional Google/Apple configuration and displays unavailable sign-in
+controls. Credentials alone must never enable authentication; there is no OAuth adapter,
+session or synchronization service yet. Read `docs/authentication.md` before connecting one.
+Keep provider secrets server-only, and keep on-device collections usable without an account.
+
 Use Node 22 and `npm ci`. Run `npm run check`, `npm run test:e2e`, and
 `npm audit --omit=dev --audit-level=high` before proposing a release. The browser suite
 builds and starts its own production server. CI also validates the Docker image.

@@ -321,6 +321,8 @@ function PortfolioContent() {
         <nav className={styles.navigation} aria-label="Collection navigation">
           <a className={styles.backLink} href="/inventory" onClick={navigateAway}>Portfolio</a>
           <a className={styles.backLink} href="/alerts" onClick={navigateAway}>Price alerts</a>
+          <a className={styles.backLink} href="/sources" onClick={navigateAway}>Website sources</a>
+          <a className={styles.backLink} href="/account" onClick={navigateAway}>Account</a>
           {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- Keep collection history entries as separate documents for beforeunload. */}
           <a className={styles.backLink} href="/" onClick={navigateAway}>Compare designs <span aria-hidden="true"><Arrow /></span></a>
         </nav>
