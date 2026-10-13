@@ -8,6 +8,11 @@ Use GitHub's private vulnerability reporting on this repository:
 **Security → Report a vulnerability**. That opens a private advisory visible
 only to the maintainers.
 
+If the reporting button is unavailable, private reporting has not been enabled by
+the maintainer. Ask the maintainer to enable a private channel first; do not include
+vulnerability details or an exploit in a public issue. Maintainers can enable this
+under the repository's security settings.
+
 Include what you need to make the problem reproducible: the affected version
 or commit, the steps or input that trigger it, and what you observed. A proof
 of concept helps but is not required.
